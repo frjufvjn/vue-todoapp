@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue Todo</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Todo App</h1>
+        <input type="text" v-model="inputText" v-on:keyup.enter="addItem">
+        <button v-on:click="addItem">add</button>
+        <div>
+            <li v-for="(todoItem, index) in todoItems">
+                {{ todoItem }}
+                <button v-on:click="removeItem(todoItem, index)">remove</button>
+            </li>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            // lifeCycle (인스턴스가 생성될때)
+            created: function () {
+                this.fetchItems();
+            },
+            el:'#app',
+            data:{
+                inputText: '',
+                todoItems: []
+            },
+            methods: {
+                addItem: function (event) {
+                    var value = this.inputText;
+                    localStorage.setItem(value, value);
+                    this.inputText = '';
+                    this.todoItems.push(value);
+
+                    // console.log(event);
+
+                    // Old 
+                    // if (event.keyCode === 13) {
+                        // $.ajax
+                        // axios.post()
+                        
+                    // }
+                    
+                },
+                fetchItems: function () {
+                    // axios.get('/todos')
+                    for (var i = 0; i < localStorage.length; i++) {
+                        var value = localStorage.key(i);
+                        this.todoItems.push(value);
+                    }
+                },
+                removeItem: function (todoItem, index) {
+                    this.todoItems.splice(index, 1);
+                    localStorage.removeItem(todoItem);
+                }
+            }
+        })
+    </script>
+</body>
+</html>
